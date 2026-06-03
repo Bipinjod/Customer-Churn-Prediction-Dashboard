@@ -15,7 +15,7 @@ Customer churn — when a customer stops using a service — is one of the most 
 
 ## 🚀 Live Demo
 
-> **Coming soon** — deployment in progress on Streamlit Cloud.
+>>https://customerss-churn-prediction-dashboard.streamlit.app/
 
 ---
 
