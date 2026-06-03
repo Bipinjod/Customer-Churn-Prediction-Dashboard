@@ -20,7 +20,7 @@ import plotly.graph_objects as go
 # ---------------------------------------------------------------------------
 st.set_page_config(
     page_title="Customer Churn Prediction Dashboard",
-    page_icon="📊",
+    page_icon="chart_with_upwards_trend",
     layout="wide",
 )
 
@@ -29,11 +29,8 @@ st.set_page_config(
 # ---------------------------------------------------------------------------
 st.markdown("""
 <style>
-/* ── Google Font ── */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
-
 html, body, [class*="css"] {
-    font-family: 'Inter', sans-serif;
+    font-family: sans-serif;
 }
 
 /* ── Main background ── */
@@ -177,7 +174,7 @@ df_raw = load_data()
 st.sidebar.markdown("""
 <div style="padding:4px 0 12px 0;">
     <div style="font-size:1.1rem; font-weight:700; color:#cba6f7; letter-spacing:0.02em;">
-        🧑‍💼 Customer Profile
+        Customer Profile
     </div>
     <div style="font-size:0.78rem; color:#a6adc8; margin-top:4px;">
         Adjust the inputs to predict churn probability.
@@ -259,7 +256,7 @@ st.markdown("""
     box-shadow: 0 6px 30px rgba(0,0,0,0.2);
 ">
     <h1 style="color:#ffffff; margin:0; font-size:2rem; font-weight:700; letter-spacing:-0.02em;">
-        📊 Customer Churn Prediction Dashboard
+        Customer Churn Prediction Dashboard
     </h1>
     <p style="color:#c9d1d9; margin:10px 0 0 0; font-size:1rem; font-weight:300;">
         Use the <strong style='color:#a78bfa;'>sidebar</strong> to enter a customer profile.
@@ -276,24 +273,24 @@ churn_prob = float(model.predict_proba(X_input)[0][1]) * 100
 # Determine risk tier
 if churn_prob < 40:
     risk_label  = "Low Risk"
-    risk_icon   = "✅"
+    risk_icon   = ""
     color       = "#2ecc71"
     border_hex  = "#2ecc71"
     desc        = "Customer is likely to stay."
 elif churn_prob < 70:
     risk_label  = "Medium Risk"
-    risk_icon   = "⚠️"
+    risk_icon   = ""
     color       = "#f39c12"
     border_hex  = "#f39c12"
     desc        = "Moderate churn risk — monitor closely."
 else:
     risk_label  = "High Risk"
-    risk_icon   = "🚨"
+    risk_icon   = ""
     color       = "#e74c3c"
     border_hex  = "#e74c3c"
     desc        = "Customer is likely to churn — act now."
 
-st.markdown("### 🔮 Churn Prediction")
+st.markdown("### Churn Prediction")
 col_prob, col_risk, col_spacer = st.columns([2, 2, 4])
 
 with col_prob:
@@ -325,9 +322,8 @@ with col_risk:
             border-left: 6px solid {border_hex};
             background:#ffffff;
             box-shadow: 0 4px 16px rgba(0,0,0,0.08);">
-            <div style="font-size:2rem; line-height:1;">{risk_icon}</div>
-            <div style="font-size:1.25rem; font-weight:700; color:{color};
-                        margin-top:6px;">{risk_label}</div>
+            <div style="font-size:1.4rem; font-weight:700; color:{color};
+                        margin-top:4px;">{risk_label}</div>
             <div style="font-size:0.82rem; color:#6c757d; margin-top:6px;">{desc}</div>
         </div>
         """,
@@ -337,7 +333,7 @@ with col_risk:
 st.markdown("---")
 
 # ── Section 3: Feature Importance Chart ──────────────────────────────────
-st.subheader("📈 Top 10 Feature Importances")
+st.subheader("Top 10 Feature Importances")
 st.markdown("Features that most influence the model's predictions (from training).")
 
 top10 = importance_df.head(10).sort_values("Importance")  # ascending for horizontal bar
@@ -363,7 +359,7 @@ st.plotly_chart(fig_imp, width='stretch')
 st.markdown("---")
 
 # ── Section 4: Data Overview (expander) ──────────────────────────────────
-with st.expander("📂 Data Overview — click to expand", expanded=False):
+with st.expander("Data Overview — click to expand", expanded=False):
     st.markdown("### Dataset Insights from `telco_churn.csv`")
 
     ov_col1, ov_col2 = st.columns(2)
