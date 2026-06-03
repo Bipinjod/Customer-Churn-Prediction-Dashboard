@@ -162,8 +162,8 @@ def build_feature_vector() -> np.ndarray:
         "MonthlyCharges":   monthly_charges,
         "TotalCharges":     total_charges,
     }
-    vector = np.array([[raw[f] for f in FEATURE_ORDER]], dtype=float)
-    return scaler.transform(vector)
+    df_input = pd.DataFrame([[raw[f] for f in FEATURE_ORDER]], columns=FEATURE_ORDER)
+    return scaler.transform(df_input)
 
 
 # ---------------------------------------------------------------------------
@@ -251,7 +251,7 @@ fig_imp.update_layout(
     coloraxis_showscale=False,
     margin=dict(l=10, r=10, t=50, b=10),
 )
-st.plotly_chart(fig_imp, use_container_width=True)
+st.plotly_chart(fig_imp, width='stretch')
 
 st.markdown("---")
 
@@ -277,7 +277,7 @@ with st.expander("📂 Data Overview — click to expand", expanded=False):
         )
         fig_pie.update_traces(textinfo="percent+label")
         fig_pie.update_layout(height=380, margin=dict(t=50, b=10))
-        st.plotly_chart(fig_pie, use_container_width=True)
+        st.plotly_chart(fig_pie, width='stretch')
 
     # --- Churn by contract type bar chart ---
     with ov_col2:
@@ -301,7 +301,7 @@ with st.expander("📂 Data Overview — click to expand", expanded=False):
             margin=dict(t=50, b=10),
             legend_title_text="Churn",
         )
-        st.plotly_chart(fig_bar, use_container_width=True)
+        st.plotly_chart(fig_bar, width='stretch')
 
     st.markdown(
         f"**Dataset:** {len(df_raw):,} customers &nbsp;|&nbsp; "

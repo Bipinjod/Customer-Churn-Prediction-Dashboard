@@ -116,6 +116,19 @@ streamlit run dashboard/app.py
 
 ---
 
+## 🔧 Recent Fixes & Improvements
+
+### EDA Notebook (`notebooks/analysis.ipynb`)
+- **Path fix** — replaced hardcoded machine-specific path with `os.chdir()` + relative `Path("data/telco_churn.csv")` for portability
+- **FutureWarning (Section 2)** — added `hue="Churn"` and `legend=False` to `sns.countplot` to comply with seaborn's updated API
+- **UserWarning (Sections 4 & 5)** — removed redundant `ax.legend()` calls; `sns.histplot` with `hue=` manages its own legend automatically
+
+### Dashboard (`dashboard/app.py`)
+- **Scaler feature-name warning** — `scaler.transform()` now receives a named `pd.DataFrame` (with `FEATURE_ORDER` column names) instead of a plain NumPy array
+- **Deprecated `use_container_width`** — replaced all `use_container_width=True` with `width='stretch'` across all `st.plotly_chart()` calls
+
+---
+
 ## 💡 Key Insights from EDA
 
 - 📌 **~26% churn rate** — significant class imbalance requiring balanced training strategies
