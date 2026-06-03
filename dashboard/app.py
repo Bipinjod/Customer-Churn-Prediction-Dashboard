@@ -25,6 +25,75 @@ st.set_page_config(
 )
 
 # ---------------------------------------------------------------------------
+# Custom CSS / Theme
+# ---------------------------------------------------------------------------
+st.markdown("""
+<style>
+/* ── Google Font ── */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+
+html, body, [class*="css"] {
+    font-family: 'Inter', sans-serif;
+}
+
+/* ── Main background ── */
+.stApp {
+    background-color: #f8f9fa;
+}
+
+/* ── Sidebar ── */
+[data-testid="stSidebar"] {
+    background-color: #1e1e2e !important;
+}
+[data-testid="stSidebar"] * {
+    color: #cdd6f4 !important;
+}
+[data-testid="stSidebar"] .stSelectbox label,
+[data-testid="stSidebar"] .stSlider label {
+    color: #a6adc8 !important;
+    font-size: 0.82rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+[data-testid="stSidebar"] hr {
+    border-color: #313244 !important;
+}
+
+/* ── Metric cards (st.metric) ── */
+[data-testid="stMetric"] {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 16px 20px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+    border-left: 4px solid #6c63ff;
+}
+
+/* ── Plotly chart containers ── */
+[data-testid="stPlotlyChart"] {
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    background: #ffffff;
+    padding: 8px;
+}
+
+/* ── Expander ── */
+[data-testid="stExpander"] {
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    border: 1px solid #e9ecef;
+}
+
+/* ── Horizontal rule ── */
+hr {
+    border-color: #dee2e6;
+}
+</style>
+""", unsafe_allow_html=True)
+
+# ---------------------------------------------------------------------------
 # Paths (resolved relative to this file, so the app works from any cwd)
 # ---------------------------------------------------------------------------
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -105,8 +174,16 @@ df_raw = load_data()
 # ---------------------------------------------------------------------------
 # ── SIDEBAR — Customer Input Form ──────────────────────────────────────────
 # ---------------------------------------------------------------------------
-st.sidebar.header("🧑‍💼 Customer Profile")
-st.sidebar.markdown("Adjust the inputs to predict churn probability.")
+st.sidebar.markdown("""
+<div style="padding:4px 0 12px 0;">
+    <div style="font-size:1.1rem; font-weight:700; color:#cba6f7; letter-spacing:0.02em;">
+        🧑‍💼 Customer Profile
+    </div>
+    <div style="font-size:0.78rem; color:#a6adc8; margin-top:4px;">
+        Adjust the inputs to predict churn probability.
+    </div>
+</div>
+""", unsafe_allow_html=True)
 
 with st.sidebar:
     gender          = st.selectbox("Gender",           ["Female", "Male"])
@@ -172,14 +249,25 @@ def build_feature_vector() -> np.ndarray:
 # ── MAIN PAGE ───────────────────────────────────────────────────────────────
 # ---------------------------------------------------------------------------
 
-# ── Section 1: Header ────────────────────────────────────────────────────
-st.title("📊 Customer Churn Prediction Dashboard")
-st.markdown(
-    "Use the **sidebar** to enter a customer's profile. "
-    "The dashboard predicts churn probability in real-time and highlights "
-    "the key features driving the model's decision."
-)
-st.markdown("---")
+# ── Section 1: Gradient Banner Header ───────────────────────────────────
+st.markdown("""
+<div style="
+    background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+    border-radius: 16px;
+    padding: 36px 40px;
+    margin-bottom: 28px;
+    box-shadow: 0 6px 30px rgba(0,0,0,0.2);
+">
+    <h1 style="color:#ffffff; margin:0; font-size:2rem; font-weight:700; letter-spacing:-0.02em;">
+        📊 Customer Churn Prediction Dashboard
+    </h1>
+    <p style="color:#c9d1d9; margin:10px 0 0 0; font-size:1rem; font-weight:300;">
+        Use the <strong style='color:#a78bfa;'>sidebar</strong> to enter a customer profile.
+        The dashboard predicts churn probability in real-time and highlights
+        the key features driving the model's decision.
+    </p>
+</div>
+""", unsafe_allow_html=True)
 
 # ── Section 2: Prediction Result ─────────────────────────────────────────
 X_input = build_feature_vector()
@@ -187,27 +275,43 @@ churn_prob = float(model.predict_proba(X_input)[0][1]) * 100
 
 # Determine risk tier
 if churn_prob < 40:
-    risk_label = "🟢 Low Risk"
-    color       = "green"
+    risk_label  = "Low Risk"
+    risk_icon   = "✅"
+    color       = "#2ecc71"
+    border_hex  = "#2ecc71"
+    desc        = "Customer is likely to stay."
 elif churn_prob < 70:
-    risk_label = "🟠 Medium Risk"
-    color       = "orange"
+    risk_label  = "Medium Risk"
+    risk_icon   = "⚠️"
+    color       = "#f39c12"
+    border_hex  = "#f39c12"
+    desc        = "Moderate churn risk — monitor closely."
 else:
-    risk_label = "🔴 High Risk"
-    color       = "red"
+    risk_label  = "High Risk"
+    risk_icon   = "🚨"
+    color       = "#e74c3c"
+    border_hex  = "#e74c3c"
+    desc        = "Customer is likely to churn — act now."
 
-st.subheader("🔮 Churn Prediction")
+st.markdown("### 🔮 Churn Prediction")
 col_prob, col_risk, col_spacer = st.columns([2, 2, 4])
 
 with col_prob:
     st.markdown(
         f"""
-        <div style="text-align:center; padding:20px; border-radius:12px;
-                    border: 2px solid {color}; background-color: #f9f9f9;">
-            <span style="font-size:3rem; font-weight:bold; color:{color};">
+        <div style="
+            text-align:center; padding:28px 20px; border-radius:14px;
+            border-left: 6px solid {border_hex};
+            background:#ffffff;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);">
+            <div style="font-size:3.2rem; font-weight:700; color:{color};
+                        letter-spacing:-0.02em; line-height:1;">
                 {churn_prob:.1f}%
-            </span><br>
-            <span style="font-size:1rem; color:#555;">Churn Probability</span>
+            </div>
+            <div style="font-size:0.85rem; color:#6c757d; margin-top:8px;
+                        font-weight:600; text-transform:uppercase; letter-spacing:0.06em;">
+                Churn Probability
+            </div>
         </div>
         """,
         unsafe_allow_html=True,
@@ -216,14 +320,15 @@ with col_prob:
 with col_risk:
     st.markdown(
         f"""
-        <div style="text-align:center; padding:20px; border-radius:12px;
-                    border: 2px solid {color}; background-color: #f9f9f9;">
-            <span style="font-size:2rem;">{risk_label}</span><br>
-            <span style="font-size:0.9rem; color:#555;">
-                {"< 40% — customer likely to stay" if churn_prob < 40
-                 else ("40–70% — moderate churn risk" if churn_prob < 70
-                       else "> 70% — high churn risk")}
-            </span>
+        <div style="
+            text-align:center; padding:28px 20px; border-radius:14px;
+            border-left: 6px solid {border_hex};
+            background:#ffffff;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);">
+            <div style="font-size:2rem; line-height:1;">{risk_icon}</div>
+            <div style="font-size:1.25rem; font-weight:700; color:{color};
+                        margin-top:6px;">{risk_label}</div>
+            <div style="font-size:0.82rem; color:#6c757d; margin-top:6px;">{desc}</div>
         </div>
         """,
         unsafe_allow_html=True,
@@ -309,3 +414,20 @@ with st.expander("📂 Data Overview — click to expand", expanded=False):
         f"**Dataset:** {len(df_raw):,} customers &nbsp;|&nbsp; "
         f"**Churn rate:** {df_raw['Churn'].eq('Yes').mean()*100:.1f}%"
     )
+
+# ---------------------------------------------------------------------------
+# Footer
+# ---------------------------------------------------------------------------
+st.markdown("""
+<hr style="margin-top:40px; border-color:#dee2e6;">
+<div style="
+    text-align:center;
+    padding: 16px 0 24px 0;
+    color: #6c757d;
+    font-size: 0.82rem;
+    font-weight: 400;
+    letter-spacing: 0.02em;
+">
+    Built by <strong>Bipin Jod</strong> &nbsp;|&nbsp; BSc Computing Internship Project 2025
+</div>
+""", unsafe_allow_html=True)
