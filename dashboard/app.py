@@ -7,6 +7,7 @@ Run from the project root:
 
 import os
 import sys
+from pathlib import Path
 import joblib
 import numpy as np
 import pandas as pd
@@ -24,12 +25,13 @@ st.set_page_config(
 )
 
 # ---------------------------------------------------------------------------
-# Paths (relative to project root where streamlit is launched)
+# Paths (resolved relative to this file, so the app works from any cwd)
 # ---------------------------------------------------------------------------
-MODEL_PATH = "models/best_model.pkl"
-SCALER_PATH = "models/scaler.pkl"
-IMPORTANCE_PATH = "models/feature_importance.csv"
-DATA_PATH = "data/telco_churn.csv"
+BASE_DIR = Path(__file__).resolve().parent.parent
+MODEL_PATH = BASE_DIR / "models" / "best_model.pkl"
+SCALER_PATH = BASE_DIR / "models" / "scaler.pkl"
+IMPORTANCE_PATH = BASE_DIR / "models" / "feature_importance.csv"
+DATA_PATH = BASE_DIR / "data" / "telco_churn.csv"
 
 # ---------------------------------------------------------------------------
 # Label-encoding maps — must exactly mirror the LabelEncoder in preprocess.py
