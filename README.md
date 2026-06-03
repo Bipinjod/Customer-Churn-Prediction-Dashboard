@@ -108,9 +108,9 @@ streamlit run dashboard/app.py
 
 | Model               | Accuracy | Precision | Recall | F1 Score | ROC-AUC |
 |---------------------|----------|-----------|--------|----------|---------|
-| Logistic Regression | —        | —         | —      | —        | —       |
-| Decision Tree       | —        | —         | —      | —        | —       |
-| Random Forest       | —        | —         | —      | —        | —       |
+| Logistic Regression | 0.7264   | 0.4909    | 0.7941 | 0.6067   | 0.8337  |
+| Decision Tree       | 0.7271   | 0.4868    | 0.4947 | 0.4907   | 0.6532  |
+| Random Forest       | 0.7825   | 0.6164    | 0.4813 | 0.5405   | 0.8121  |
 
 > Run `python src/train.py` to populate these results in your terminal.
 
